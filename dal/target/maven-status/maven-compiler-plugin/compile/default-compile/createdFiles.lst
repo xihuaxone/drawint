@@ -1,6 +1,0 @@
-com\drawint\dal\mapper\TerminalActionMapper.class
-com\drawint\dal\mapper\UserMapper.class
-com\drawint\dal\mapper\UserIdentifyMapper.class
-com\drawint\dal\relay\RelayTcpMaster.class
-com\drawint\dal\mapper\TerminalMQTTMapper.class
-com\drawint\dal\relay\impl\RelayTcpMasterImpl.class
