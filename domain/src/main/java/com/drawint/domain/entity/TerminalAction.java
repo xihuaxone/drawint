@@ -11,7 +11,7 @@ public class TerminalAction {
 
     private Integer concurrencyLevel;
 
-    private Integer interval;
+    private Integer aroundInterval;
 
     private Boolean isDeleted;
 
@@ -55,12 +55,12 @@ public class TerminalAction {
         this.concurrencyLevel = concurrencyLevel;
     }
 
-    public Integer getInterval() {
-        return interval;
+    public Integer getAroundInterval() {
+        return aroundInterval;
     }
 
-    public void setInterval(Integer interval) {
-        this.interval = interval;
+    public void setAroundInterval(Integer aroundInterval) {
+        this.aroundInterval = aroundInterval;
     }
 
     public Boolean getIsDeleted() {

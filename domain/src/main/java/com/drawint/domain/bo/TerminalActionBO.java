@@ -12,7 +12,7 @@ public class TerminalActionBO {
 
     private String code;
 
-    private Byte concurrencyLevel;
+    private Integer concurrencyLevel;
 
     private Integer interval;
 }

@@ -2,7 +2,7 @@ package com.drawint.service.model.terminal.impl;
 
 import com.drawint.common.BizExceptionType;
 import com.drawint.common.exception.BizException;
-import com.drawint.service.enums.ConcurrencyLevelEnum;
+import com.drawint.domain.enums.ConcurrencyLevelEnum;
 import com.drawint.service.enums.LightActionEnum;
 import com.drawint.service.enums.PinESP01SEnum;
 import com.drawint.service.model.termialaction.TerminalAction;

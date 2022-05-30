@@ -3,6 +3,7 @@ package com.drawint.domain.bo;
 import com.drawint.domain.entity.TerminalMQTT;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,6 +16,10 @@ public class TerminalBO {
 
     private List<TerminalActionBO> actionList;
 
+    {
+        actionList = new ArrayList<>(5);
+    }
+
     public TerminalBO(TerminalMQTT terminalMQTT) {
         this.id = terminalMQTT.getId();
         this.topic = terminalMQTT.getTopic();
@@ -26,6 +31,9 @@ public class TerminalBO {
     }
 
     public void addAction(List<TerminalActionBO> terminalActionBOList) {
+        if (terminalActionBOList == null || terminalActionBOList.isEmpty()) {
+            return;
+        }
         actionList.addAll(terminalActionBOList);
     }
 }

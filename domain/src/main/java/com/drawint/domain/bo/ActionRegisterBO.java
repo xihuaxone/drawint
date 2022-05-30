@@ -9,7 +9,7 @@ public class ActionRegisterBO {
 
     private String code;
 
-    private Short concurrencyLevel;
+    private Integer concurrencyLevel;
 
     private Integer interval;
 

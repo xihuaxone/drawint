@@ -7,7 +7,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="concurrency_level" jdbcType="INTEGER" property="concurrencyLevel" />
-    <result column="interval" jdbcType="INTEGER" property="interval" />
+    <result column="around_interval" jdbcType="INTEGER" property="aroundInterval" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tm_id, name, code, concurrency_level, interval, is_deleted
+    id, tm_id, name, code, concurrency_level, around_interval, is_deleted
   </sql>
   <select id="selectByExample" parameterType="com.drawint.domain.entity.TerminalActionExample" resultMap="BaseResultMap">
     select
@@ -103,10 +103,10 @@
   </delete>
   <insert id="insert" parameterType="com.drawint.domain.entity.TerminalAction">
     insert into terminal_action (id, tm_id, name, 
-      code, concurrency_level, interval, 
+      code, concurrency_level, around_interval, 
       is_deleted)
     values (#{id,jdbcType=BIGINT}, #{tmId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{code,jdbcType=VARCHAR}, #{concurrencyLevel,jdbcType=INTEGER}, #{interval,jdbcType=INTEGER}, 
+      #{code,jdbcType=VARCHAR}, #{concurrencyLevel,jdbcType=INTEGER}, #{aroundInterval,jdbcType=INTEGER}, 
       #{isDeleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.drawint.domain.entity.TerminalAction">
@@ -127,8 +127,8 @@
       <if test="concurrencyLevel != null">
         concurrency_level,
       </if>
-      <if test="interval != null">
-        interval,
+      <if test="aroundInterval != null">
+        around_interval,
       </if>
       <if test="isDeleted != null">
         is_deleted,
@@ -150,8 +150,8 @@
       <if test="concurrencyLevel != null">
         #{concurrencyLevel,jdbcType=INTEGER},
       </if>
-      <if test="interval != null">
-        #{interval,jdbcType=INTEGER},
+      <if test="aroundInterval != null">
+        #{aroundInterval,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
@@ -182,8 +182,8 @@
       <if test="record.concurrencyLevel != null">
         concurrency_level = #{record.concurrencyLevel,jdbcType=INTEGER},
       </if>
-      <if test="record.interval != null">
-        interval = #{record.interval,jdbcType=INTEGER},
+      <if test="record.aroundInterval != null">
+        around_interval = #{record.aroundInterval,jdbcType=INTEGER},
       </if>
       <if test="record.isDeleted != null">
         is_deleted = #{record.isDeleted,jdbcType=BIT},
@@ -200,7 +200,7 @@
       name = #{record.name,jdbcType=VARCHAR},
       code = #{record.code,jdbcType=VARCHAR},
       concurrency_level = #{record.concurrencyLevel,jdbcType=INTEGER},
-      interval = #{record.interval,jdbcType=INTEGER},
+      around_interval = #{record.aroundInterval,jdbcType=INTEGER},
       is_deleted = #{record.isDeleted,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -221,8 +221,8 @@
       <if test="concurrencyLevel != null">
         concurrency_level = #{concurrencyLevel,jdbcType=INTEGER},
       </if>
-      <if test="interval != null">
-        interval = #{interval,jdbcType=INTEGER},
+      <if test="aroundInterval != null">
+        around_interval = #{aroundInterval,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
@@ -236,7 +236,7 @@
       name = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
       concurrency_level = #{concurrencyLevel,jdbcType=INTEGER},
-      interval = #{interval,jdbcType=INTEGER},
+      around_interval = #{aroundInterval,jdbcType=INTEGER},
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

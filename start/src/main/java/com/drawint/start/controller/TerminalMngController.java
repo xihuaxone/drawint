@@ -7,7 +7,9 @@ import com.drawint.domain.bo.ActionRegisterBO;
 import com.drawint.domain.bo.TerminalBO;
 import com.drawint.domain.bo.TerminalRegisterBO;
 import com.drawint.domain.dto.TokenPayload;
+import com.drawint.domain.enums.TerminalActionCodeEnum;
 import com.drawint.service.TerminalMngService;
+import com.drawint.domain.enums.ConcurrencyLevelEnum;
 import com.drawint.start.annotation.LoginAuth;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,16 @@ public class TerminalMngController {
     public ApiResult<TerminalBO> registerTerminal(@RequestBody TerminalRegisterBO terminalRegisterBO,
                                                   HttpServletRequest request) {
         TokenPayload payload = (TokenPayload)request.getAttribute("payload");
-        terminalMngService.registerTerminal(terminalRegisterBO);
+
+        ActionRegisterBO actionConnCheck = new ActionRegisterBO();
+        // 默认至少有一个连通性检查action，如果前端未传递，在这里自动补上；
+        if (!terminalRegisterBO.hasConnCheckAction()) {
+            actionConnCheck.setName("Check Connection");
+            actionConnCheck.setCode(TerminalActionCodeEnum.CONN_CHECK.getCode());
+            actionConnCheck.setConcurrencyLevel(ConcurrencyLevelEnum.SERIAL.getCode());
+            terminalRegisterBO.getActionList().add(actionConnCheck);
+        }
+        terminalMngService.registerTerminal(terminalRegisterBO, payload.getUid());
         TerminalBO terminalBO = terminalMngService.get(terminalRegisterBO.getTopic(), payload.getUid());
         if (terminalBO == null) {
             throw new BizException(BizExceptionType.TERMINAL_REGISTER_FAILED);

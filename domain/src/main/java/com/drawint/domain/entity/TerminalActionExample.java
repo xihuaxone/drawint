@@ -424,63 +424,63 @@ public class TerminalActionExample {
             return (Criteria) this;
         }
 
-        public Criteria andIntervalIsNull() {
-            addCriterion("interval is null");
+        public Criteria andAroundIntervalIsNull() {
+            addCriterion("around_interval is null");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalIsNotNull() {
-            addCriterion("interval is not null");
+        public Criteria andAroundIntervalIsNotNull() {
+            addCriterion("around_interval is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalEqualTo(Integer value) {
-            addCriterion("interval =", value, "interval");
+        public Criteria andAroundIntervalEqualTo(Integer value) {
+            addCriterion("around_interval =", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalNotEqualTo(Integer value) {
-            addCriterion("interval <>", value, "interval");
+        public Criteria andAroundIntervalNotEqualTo(Integer value) {
+            addCriterion("around_interval <>", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalGreaterThan(Integer value) {
-            addCriterion("interval >", value, "interval");
+        public Criteria andAroundIntervalGreaterThan(Integer value) {
+            addCriterion("around_interval >", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalGreaterThanOrEqualTo(Integer value) {
-            addCriterion("interval >=", value, "interval");
+        public Criteria andAroundIntervalGreaterThanOrEqualTo(Integer value) {
+            addCriterion("around_interval >=", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalLessThan(Integer value) {
-            addCriterion("interval <", value, "interval");
+        public Criteria andAroundIntervalLessThan(Integer value) {
+            addCriterion("around_interval <", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalLessThanOrEqualTo(Integer value) {
-            addCriterion("interval <=", value, "interval");
+        public Criteria andAroundIntervalLessThanOrEqualTo(Integer value) {
+            addCriterion("around_interval <=", value, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalIn(List<Integer> values) {
-            addCriterion("interval in", values, "interval");
+        public Criteria andAroundIntervalIn(List<Integer> values) {
+            addCriterion("around_interval in", values, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalNotIn(List<Integer> values) {
-            addCriterion("interval not in", values, "interval");
+        public Criteria andAroundIntervalNotIn(List<Integer> values) {
+            addCriterion("around_interval not in", values, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalBetween(Integer value1, Integer value2) {
-            addCriterion("interval between", value1, value2, "interval");
+        public Criteria andAroundIntervalBetween(Integer value1, Integer value2) {
+            addCriterion("around_interval between", value1, value2, "aroundInterval");
             return (Criteria) this;
         }
 
-        public Criteria andIntervalNotBetween(Integer value1, Integer value2) {
-            addCriterion("interval not between", value1, value2, "interval");
+        public Criteria andAroundIntervalNotBetween(Integer value1, Integer value2) {
+            addCriterion("around_interval not between", value1, value2, "aroundInterval");
             return (Criteria) this;
         }
 

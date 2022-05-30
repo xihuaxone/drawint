@@ -32,12 +32,18 @@ public class TerminalMngServiceImpl implements TerminalMngService {
     private UserTerminalActionPermissionMapper permissionMapper;
 
     @Override
-    public void registerTerminal(TerminalRegisterBO terminalRegisterBO) {
+    public void registerTerminal(TerminalRegisterBO terminalRegisterBO, Long uid) {
         TerminalMQTT terminalMQTT = TerminalConverter.INSTANCE.terminalRegisterBO2TerminalMQTT(terminalRegisterBO);
         if (checkTerminalExists(terminalMQTT.getTopic())) {
             throw new BizException(BizExceptionType.TERMINAL_EXISTS);
         }
         terminalMQTTMapper.insertSelective(terminalMQTT);
+
+        TerminalMQTT terminal = getByTopic(terminalRegisterBO.getTopic());
+        if (terminal == null) {
+            throw new BizException(BizExceptionType.TERMINAL_REGISTER_FAILED, "DB terminal record creating failed.");
+        }
+        registerAction(terminal.getId(), terminalRegisterBO.getActionList(), uid);
     }
 
     @Override
@@ -51,12 +57,16 @@ public class TerminalMngServiceImpl implements TerminalMngService {
             TerminalAction action = TerminalConverter.INSTANCE.actionRegisterBO2TerminalAction(actionRegisterBO);
             action.setTmId(tmId);
             terminalActionMapper.insertSelective(action);
+            TerminalAction terminalAction = getAction(tmId, actionRegisterBO.getCode());
+            if (terminalAction == null) {
+                throw new BizException(BizExceptionType.TERMINAL_REGISTER_FAILED,
+                        "DB terminal action record creating failed.");
+            }
             // 注册用户对action的权限等级;
             UserTerminalActionPermission permission = new UserTerminalActionPermission();
             permission.setUid(uid);
             permission.setTmId(tmId);
-            // TODO test
-            permission.setTaId(action.getId());
+            permission.setTaId(terminalAction.getId());
             permission.setPermissionLevel(actionRegisterBO.getUserPermissionLevel());
             permissionMapper.insertSelective(permission);
         }
@@ -93,12 +103,11 @@ public class TerminalMngServiceImpl implements TerminalMngService {
         example.createCriteria()
                 .andTopicEqualTo(topic).andIsDeletedEqualTo(false);
 
-        List<TerminalMQTT> terminalMQTTS = terminalMQTTMapper.selectByExample(example);
-        if (terminalMQTTS.isEmpty()) {
+        TerminalMQTT terminal = getByTopic(topic);
+        if (terminal == null) {
             return null;
         }
-        TerminalMQTT terminal = terminalMQTTS.get(0);
-        TerminalBO terminalBO = new TerminalBO(terminalMQTTS.get(0));
+        TerminalBO terminalBO = new TerminalBO(terminal);
 
         UserTerminalActionPermissionExample permissionExample = new UserTerminalActionPermissionExample();
         permissionExample.createCriteria()
@@ -113,6 +122,32 @@ public class TerminalMngServiceImpl implements TerminalMngService {
 
         terminalBO.addAction(TerminalConverter.INSTANCE.terminalAction2TerminalActionBO(aliveActions));
         return terminalBO;
+    }
+
+    private TerminalMQTT getByTopic(String topic) {
+        TerminalMQTTExample example = new TerminalMQTTExample();
+        example.createCriteria()
+                .andTopicEqualTo(topic).andIsDeletedEqualTo(false);
+        List<TerminalMQTT> records = terminalMQTTMapper.selectByExample(example);
+        if (records.size() > 1) {
+            throw new BizException(BizExceptionType.UNKNOWN_EXCEPTION,
+                    String.format("terminal (%s) count = %s", topic, records.size()));
+        }
+        return records.isEmpty() ? null : records.get(0);
+    }
+
+    private TerminalAction getAction(Long tmId, String code) {
+        TerminalActionExample example = new TerminalActionExample();
+        example.createCriteria()
+                .andTmIdEqualTo(tmId)
+                .andCodeEqualTo(code)
+                .andIsDeletedEqualTo(false);
+        List<TerminalAction> records = terminalActionMapper.selectByExample(example);
+        if (records.size() > 1) {
+            throw new BizException(BizExceptionType.UNKNOWN_EXCEPTION,
+                    String.format("terminal (%s) action (%s) count = %s", tmId, code, records.size()));
+        }
+        return records.isEmpty() ? null : records.get(0);
     }
 
     private boolean checkTerminalExists(String topic) {

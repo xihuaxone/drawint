@@ -7,7 +7,7 @@ import com.drawint.domain.bo.TerminalRegisterBO;
 import java.util.List;
 
 public interface TerminalMngService {
-    void registerTerminal(TerminalRegisterBO terminalRegisterBO);
+    void registerTerminal(TerminalRegisterBO terminalRegisterBO, Long uid);
 
     void registerAction(Long tmId, List<ActionRegisterBO> actionRegisterBOList, Long uid);
 
