@@ -1,6 +1,6 @@
 package com.drawint.service.model.termialaction;
 
-import com.drawint.service.enums.PinESP01SEnum;
+import com.drawint.domain.enums.PinESP01SEnum;
 
 public interface TerminalAction {
     void enable(PinESP01SEnum pin);

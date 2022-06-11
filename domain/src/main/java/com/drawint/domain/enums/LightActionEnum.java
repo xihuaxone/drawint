@@ -1,17 +1,18 @@
 package com.drawint.domain.enums;
 
-public enum DoorActionEnum {
+public enum LightActionEnum {
     CONN_CHECK("CONN_CHECK", "检查终端是否连通", TerminalActionPermissionLevelEnum.OPERABLE),
-    OPEN("OPEN", "", TerminalActionPermissionLevelEnum.OPERABLE),
-    CLOSE("CLOSE", "", TerminalActionPermissionLevelEnum.OPERABLE),
-    RESET("RESET", "", TerminalActionPermissionLevelEnum.OPERABLE),
+    OPEN("OPEN", "", TerminalActionPermissionLevelEnum.EDITABLE),
+    CLOSE("CLOSE", "", TerminalActionPermissionLevelEnum.EDITABLE),
+    SWITCH("SWITCH", "", TerminalActionPermissionLevelEnum.EDITABLE),
+    EDIT_LUMINANCE("EDIT_LUMINANCE", "", TerminalActionPermissionLevelEnum.OPERABLE),
     ;
 
     private final String code;
 
     private final TerminalActionPermissionLevelEnum permissionLevel;
 
-    DoorActionEnum(String code, String desc, TerminalActionPermissionLevelEnum permissionLevel) {
+    LightActionEnum(String code, String desc, TerminalActionPermissionLevelEnum permissionLevel) {
         this.code = code;
         this.permissionLevel = permissionLevel;
     }
@@ -26,14 +27,5 @@ public enum DoorActionEnum {
 
     public boolean isAllowed(Integer permissionLevel) {
         return permissionLevel <= this.getPermissionLevel().getId();
-    }
-
-    public static boolean contains(String actionCode) {
-        for (DoorActionEnum value : DoorActionEnum.values()) {
-            if (value.getCode().equals(actionCode)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

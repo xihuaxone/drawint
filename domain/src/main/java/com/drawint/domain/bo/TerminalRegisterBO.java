@@ -13,6 +13,8 @@ public class TerminalRegisterBO {
 
     private String name;
 
+    private String type;
+
     private List<ActionRegisterBO> actionList;
 
     {

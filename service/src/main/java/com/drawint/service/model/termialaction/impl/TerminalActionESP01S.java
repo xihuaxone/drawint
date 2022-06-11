@@ -1,7 +1,7 @@
 package com.drawint.service.model.termialaction.impl;
 
 import com.drawint.common.utils.MQTTUtil;
-import com.drawint.service.enums.PinESP01SEnum;
+import com.drawint.domain.enums.PinESP01SEnum;
 import com.drawint.service.model.termialaction.AbstractTerminalAction;
 
 public class TerminalActionESP01S extends AbstractTerminalAction {

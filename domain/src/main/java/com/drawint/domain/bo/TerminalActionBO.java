@@ -15,4 +15,6 @@ public class TerminalActionBO {
     private Integer concurrencyLevel;
 
     private Integer interval;
+
+    private UserTerminalActionPermissionBO permission;
 }

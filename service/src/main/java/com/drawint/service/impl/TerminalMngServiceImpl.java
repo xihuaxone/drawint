@@ -5,12 +5,11 @@ import com.drawint.common.exception.BizException;
 import com.drawint.dal.mapper.TerminalActionMapper;
 import com.drawint.dal.mapper.TerminalMQTTMapper;
 import com.drawint.dal.mapper.UserTerminalActionPermissionMapper;
-import com.drawint.domain.bo.ActionRegisterBO;
-import com.drawint.domain.bo.TerminalBO;
-import com.drawint.domain.bo.TerminalRegisterBO;
+import com.drawint.domain.bo.*;
 import com.drawint.domain.converter.TerminalConverter;
 import com.drawint.domain.entity.*;
 import com.drawint.domain.enums.TerminalActionPermissionLevelEnum;
+import com.drawint.domain.enums.TerminalTypeEnum;
 import com.drawint.service.TerminalMngService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,9 @@ public class TerminalMngServiceImpl implements TerminalMngService {
     @Override
     public void registerTerminal(TerminalRegisterBO terminalRegisterBO, Long uid) {
         TerminalMQTT terminalMQTT = TerminalConverter.INSTANCE.terminalRegisterBO2TerminalMQTT(terminalRegisterBO);
+        if (!TerminalTypeEnum.contains(terminalMQTT.getType())) {
+            throw new BizException(BizExceptionType.TERMINAL_TYPE_NOT_EXISTS);
+        }
         if (checkTerminalExists(terminalMQTT.getTopic())) {
             throw new BizException(BizExceptionType.TERMINAL_EXISTS);
         }
@@ -101,10 +103,19 @@ public class TerminalMngServiceImpl implements TerminalMngService {
     public TerminalBO get(String topic, Long uid) {
         TerminalMQTTExample example = new TerminalMQTTExample();
         example.createCriteria()
-                .andTopicEqualTo(topic).andIsDeletedEqualTo(false);
-
+                .andTopicEqualTo(topic)
+                .andIsDeletedEqualTo(false);
         TerminalMQTT terminal = getByTopic(topic);
-        if (terminal == null) {
+        return get(terminal, uid);
+    }
+
+    @Override
+    public TerminalBO get(Long tmId, Long uid) {
+        return get(terminalMQTTMapper.selectByPrimaryKey(tmId), uid);
+    }
+
+    private TerminalBO get(TerminalMQTT terminal, Long uid) {
+        if (terminal == null || terminal.getIsDeleted()) {
             return null;
         }
         TerminalBO terminalBO = new TerminalBO(terminal);
@@ -115,13 +126,38 @@ public class TerminalMngServiceImpl implements TerminalMngService {
                 .andTmIdEqualTo(terminal.getId())
                 .andPermissionLevelLessThanOrEqualTo(TerminalActionPermissionLevelEnum.VISIBLE.getId());
         List<UserTerminalActionPermission> permissionList = permissionMapper.selectByExample(permissionExample);
-        List<TerminalAction> actions = permissionList.stream()
-                .map(rec -> terminalActionMapper.selectByPrimaryKey(rec.getTaId())).collect(Collectors.toList());
-        List<TerminalAction> aliveActions = actions.stream()
-                .filter(rec -> rec.getIsDeleted().equals(false)).collect(Collectors.toList());
 
-        terminalBO.addAction(TerminalConverter.INSTANCE.terminalAction2TerminalActionBO(aliveActions));
+        for (UserTerminalActionPermission permission : permissionList) {
+            TerminalAction terminalAction = terminalActionMapper.selectByPrimaryKey(permission.getTaId());
+            if (terminalAction.getIsDeleted()) {
+                continue;
+            }
+            TerminalActionBO actionBO = TerminalConverter.INSTANCE.terminalAction2TerminalActionBO(terminalAction);
+            UserTerminalActionPermissionBO permissionBO = new UserTerminalActionPermissionBO();
+            permissionBO.setPermissionLevel(permission.getPermissionLevel());
+            actionBO.setPermission(permissionBO);
+            terminalBO.addAction(actionBO);
+        }
         return terminalBO;
+    }
+
+    @Override
+    public UserTerminalActionPermission getActionPermission(Long uid, Long tmId, String actionCode) {
+        TerminalAction action = getAction(tmId, actionCode);
+        if (action == null) {
+            throw new BizException(BizExceptionType.TERMINAL_ACTION_NOT_EXISTS,
+                    "terminal: " + tmId + " action: " +actionCode);
+        }
+        UserTerminalActionPermissionExample permissionExample = new UserTerminalActionPermissionExample();
+        permissionExample.createCriteria()
+                .andUidEqualTo(uid)
+                .andTmIdEqualTo(tmId)
+                .andTaIdEqualTo(action.getId());
+        List<UserTerminalActionPermission> permissionList = permissionMapper.selectByExample(permissionExample);
+        if (permissionList.isEmpty()) {
+            return null;
+        }
+        return permissionList.get(0);
     }
 
     private TerminalMQTT getByTopic(String topic) {

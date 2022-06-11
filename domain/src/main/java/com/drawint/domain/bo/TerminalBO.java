@@ -14,6 +14,8 @@ public class TerminalBO {
 
     private String name;
 
+    private String type;
+
     private List<TerminalActionBO> actionList;
 
     {
@@ -24,6 +26,7 @@ public class TerminalBO {
         this.id = terminalMQTT.getId();
         this.topic = terminalMQTT.getTopic();
         this.name = terminalMQTT.getName();
+        this.type = terminalMQTT.getType();
     }
 
     public void addAction(TerminalActionBO terminalActionBO) {
@@ -35,5 +38,14 @@ public class TerminalBO {
             return;
         }
         actionList.addAll(terminalActionBOList);
+    }
+
+    public TerminalActionBO getAction(String action) {
+        for (TerminalActionBO actionBO : actionList) {
+            if (actionBO.getCode().equals(action)) {
+                return actionBO;
+            }
+        }
+        return null;
     }
 }

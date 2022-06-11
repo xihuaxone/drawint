@@ -1,4 +1,4 @@
-package com.drawint.service.enums;
+package com.drawint.domain.enums;
 
 public enum PinESP01SEnum {
     PIN_0("0"),
